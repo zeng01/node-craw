@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bootstrap 101 Template</title>
+
+    <!-- Bootstrap -->
+    <link href="lib/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+      .table > tbody > tr > td {
+        line-height: 72px;
+      }
+      .table > tbody > tr > td > img {
+        width: 72px;
+        height: 72px;
+      }
+      .title{
+       width: 300px;
+      }
+    </style>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <header>
+      <div class="page-header container">
+        <h1>
+          <a href="#">克鲁赛德战记</a>
+          <small>管理系统</small>
+        </h1>
+      </div>
+    </header>
+    <div class="container">
+      <a class="btn btn-success pull-right" href="add.html">添加英雄</a>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>编号</th>
+            <th>名字</th>
+            <th>头像</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>雷姆</td>
+            <td>
+              <img
+                src="http://p6.qhimg.com/dr/72__/t01e18311664d7c54e6.png"
+                alt=""
+              />
+            </td>
+            <td>
+              <a class="check" href="#">查看</a>
+              <a class="delete" href="#">删除</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="lib/js/jquery-1.12.4.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="lib/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/art-template/lib/template-web.js"></script>
+<script type='text/html' id='tr'>
+  {{each data value}}
+  <tr>
+      <td>{{value.Id}}</td>
+      <td class='title'>{{value.title}}</td>
+      <td>
+        <img
+          src="{{value.pic}}"
+          alt=""
+        />
+      </td>
+      <td>
+        <a class="check" href="detail.html?id={{value.Id}}">查看</a>
+        <a class="delete" data-id='{{value.Id}}' href="#">删除</a>
+      </td>
+    </tr>
+  {{/each}}
+</script>
+<script>
+  getList();
+  deleteList();
+  function getList(){
+    $.ajax({
+    url:'/list',
+    dataType:'json',
+    success:data=>{
+      // console.log(data);
+      var html=template('tr',{data:data});
+      $('tbody').html(html);
+    }
+  })
+  }
+
+  function deleteList(){
+    $('tbody').on('click','.delete',function(){
+      var id=$(this).data('id');
+      $.ajax({
+        url:'/delete',
+        data:{id:id},
+        success(data){
+          getList();
+        }
+      })
+      return false;
+    })
+  }
+</script>
